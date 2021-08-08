@@ -156,7 +156,7 @@ class BillController extends Controller {
       if (!decode) return;
 
       // 根据账单 id 和 user_id，修改账单数据
-      const result = await ctx.service.bill.update({
+      await ctx.service.bill.update({
         id, // 账单 id
         amount, // 金额
         type_id, // 消费类型 id
