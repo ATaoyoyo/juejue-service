@@ -33,6 +33,23 @@ class BillService extends Service {
       console.log(e);
     }
   }
+
+  /**
+   * 查询账单详情
+   * @param id
+   * @param user_id
+   * @returns {Promise<*|null>}
+   */
+  async detail(id, user_id) {
+    const { ctx, app } = this;
+    try {
+      const result = await app.mysql.get('bill', { id, user_id });
+      return result;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
 }
 
 module.exports = BillService;

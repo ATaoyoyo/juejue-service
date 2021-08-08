@@ -41,7 +41,7 @@ class BillController extends Controller {
    */
   async list() {
     const { ctx, app } = this;
-    let { date, page = 1, page_size = 5, type_id = 'all' } = ctx.query;
+    const { date, page = 1, page_size = 5, type_id = 'all' } = ctx.query;
 
     try {
       const token = ctx.request.header.authorization;
@@ -109,6 +109,28 @@ class BillController extends Controller {
           list: filterListMap || [] // 格式化后，并且经过分页处理的数据
         }
       });
+    } catch (e) {
+      console.log(e);
+      ctx.body = errorMsg({ message: '系统错误' });
+    }
+  }
+
+
+  async detail() {
+    const { ctx, app } = this;
+    const { id = '' } = ctx.query;
+    const token = ctx.request.header.authorization;
+    const decode = await app.jwt.verify(token, app.config.jwt.secret);
+
+    if (!decode) return;
+    if (!id) {
+      ctx.body = errorMsg({ data: '账单id不能唯空' });
+      return;
+    }
+
+    try {
+      const detail = await ctx.service.bill.detail(id, decode.id);
+      ctx.body = successMsg({ data: detail });
     } catch (e) {
       console.log(e);
       ctx.body = errorMsg({ message: '系统错误' });
