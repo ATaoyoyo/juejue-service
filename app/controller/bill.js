@@ -27,7 +27,7 @@ class BillController extends Controller {
       if (!decode) return;
 
       const params = { user_id, amount, type_id, type_name, date, pay_type, remark };
-      const result = await ctx.service.bill.add(params);
+      await ctx.service.bill.add(params);
       ctx.body = successMsg({ message: '插入成功' });
     } catch (e) {
       console.log(e);
@@ -45,7 +45,7 @@ class BillController extends Controller {
 
     try {
       const token = ctx.request.header.authorization;
-      const decode = await app.jwt.verify(token, app.config.jwt.secret);
+      const decode = app.jwt.verify(token, app.config.jwt.secret);
       if (!decode) return;
 
       const list = await ctx.service.bill.list(decode.id);
@@ -120,7 +120,7 @@ class BillController extends Controller {
     const { ctx, app } = this;
     const { id = '' } = ctx.query;
     const token = ctx.request.header.authorization;
-    const decode = await app.jwt.verify(token, app.config.jwt.secret);
+    const decode = app.jwt.verify(token, app.config.jwt.secret);
 
     if (!decode) return;
     if (!id) {
@@ -131,6 +131,42 @@ class BillController extends Controller {
     try {
       const detail = await ctx.service.bill.detail(id, decode.id);
       ctx.body = successMsg({ data: detail });
+    } catch (e) {
+      console.log(e);
+      ctx.body = errorMsg({ message: '系统错误' });
+    }
+  }
+
+  /**
+   * 更新账单
+   * @returns {Promise<void>}
+   */
+  async update() {
+    const { ctx, app } = this;
+    const { id, amount, type_id, type_name, date, pay_type, remark = '' } = ctx.request.body;
+    // 判空处理
+    if (!amount || !type_id || !type_name || !date || !pay_type) {
+      ctx.body = errorMsg({ data: '参数错误' });
+      return;
+    }
+
+    try {
+      const token = ctx.request.header.authorization;
+      const decode = app.jwt.verify(token, app.config.jwt.secret);
+      if (!decode) return;
+
+      // 根据账单 id 和 user_id，修改账单数据
+      const result = await ctx.service.bill.update({
+        id, // 账单 id
+        amount, // 金额
+        type_id, // 消费类型 id
+        type_name, // 消费类型名称
+        date, // 日期
+        pay_type, // 消费类型
+        remark, // 备注
+        user_id: decode.id // 用户 id
+      });
+      ctx.body = successMsg({});
     } catch (e) {
       console.log(e);
       ctx.body = errorMsg({ message: '系统错误' });

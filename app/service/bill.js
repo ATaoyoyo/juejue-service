@@ -7,10 +7,9 @@ class BillService extends Service {
    * @returns {Promise<*|null>}
    */
   async add(params) {
-    const { ctx, app } = this;
+    const {  app } = this;
     try {
-      const result = await app.mysql.insert('bill', params);
-      return result;
+      return await app.mysql.insert('bill', params);
     } catch (e) {
       console.log(e);
       return null;
@@ -23,12 +22,11 @@ class BillService extends Service {
    * @returns {Promise<*>}
    */
   async list(id) {
-    const { ctx, app } = this;
+    const {  app } = this;
     const QUERY_STR = 'id, pay_type, amount, date, type_id, type_name, remark';
     let sql = `select ${QUERY_STR} from bill where user_id = ${id}`;
     try {
-      const result = await app.mysql.query(sql);
-      return result;
+      return await app.mysql.query(sql);
     } catch (e) {
       console.log(e);
     }
@@ -41,10 +39,25 @@ class BillService extends Service {
    * @returns {Promise<*|null>}
    */
   async detail(id, user_id) {
-    const { ctx, app } = this;
+    const {  app } = this;
     try {
-      const result = await app.mysql.get('bill', { id, user_id });
-      return result;
+      return await app.mysql.get('bill', { id, user_id });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  /**
+   * 更新账单
+   * @param params
+   * @returns {Promise<void>}
+   */
+  async update(params) {
+    const { app } = this;
+    try {
+      const value = { id: params.id, user_id: params.user_id };
+      return await app.mysql.update('bill', { ...params }, value);
     } catch (e) {
       console.log(e);
       return null;
