@@ -172,6 +172,28 @@ class BillController extends Controller {
       ctx.body = errorMsg({ message: '系统错误' });
     }
   }
+
+  /**
+   * 删除账单
+   * @returns {Promise<void>}
+   */
+  async delete() {
+    const { ctx, app } = this;
+    const { id } = ctx.request.body;
+    const token = ctx.request.header.authorization;
+    const decode = app.jwt.verify(token, app.config.jwt.secret);
+
+    if (!decode) return;
+
+    try {
+      await ctx.service.bill.delete(id, decode.id);
+      ctx.body = successMsg({});
+    } catch (e) {
+      console.log(e);
+      ctx.body = errorMsg({ message: '系统错误' });
+    }
+
+  }
 }
 
 module.exports = BillController;
