@@ -74,7 +74,7 @@ class UserController extends Controller {
     const { ctx, app } = this;
     const token = ctx.request.header.authorization;
     const decode = await app.jwt.verify(token, app.config.jwt.secret);
-    const userInfo = await ctx.service.user.getUserByName(decode.username)
+    const userInfo = await ctx.service.user.getUserByName(decode.username);
     ctx.body = successMsg({
       data: {
         id: userInfo.id,
@@ -83,6 +83,36 @@ class UserController extends Controller {
         avatar: userInfo.avatar || defaultAvatar
       }
     });
+  }
+
+  /**
+   * 编辑用户信息
+   * @returns {Promise<void>}
+   */
+  async editUserInfo() {
+    const { ctx, app } = this;
+    const { signature = '' } = ctx.request.body;
+    try {
+      let user_id;
+      const token = ctx.request.header.authorization;
+      const decode = await app.jwt.verify(token, app.config.jwt.secret);
+      if (!decode) return;
+      user_id = decode.id;
+      const userInfo = await ctx.service.user.getUserByName(decode.username);
+      const result = await ctx.service.user.editUserInfo({
+        ...userInfo, signature
+      });
+
+      ctx.body = successMsg({
+        data: {
+          id: user_id,
+          username: userInfo.username,
+          signature,
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async test() {
