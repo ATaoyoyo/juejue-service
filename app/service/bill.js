@@ -1,10 +1,11 @@
+'use strict';
 const { Service } = require('egg');
 
 class BillService extends Service {
   /**
    * 添加账单
    * @param params
-   * @returns {Promise<*|null>}
+   * @return {Promise<*|null>}
    */
   async add(params) {
     const { app } = this;
@@ -19,12 +20,12 @@ class BillService extends Service {
   /**
    * 查询账单
    * @param id
-   * @returns {Promise<*>}
+   * @return {Promise<*>}
    */
   async list(id) {
     const { app } = this;
     const QUERY_STR = 'id, pay_type, amount, date, type_id, type_name, remark';
-    let sql = `select ${QUERY_STR} from bill where user_id = ${id}`;
+    const sql = `select ${QUERY_STR} from bill where user_id = ${id}`;
     try {
       return await app.mysql.query(sql);
     } catch (e) {
@@ -36,7 +37,7 @@ class BillService extends Service {
    * 查询账单详情
    * @param id
    * @param user_id
-   * @returns {Promise<*|null>}
+   * @return {Promise<*|null>}
    */
   async detail(id, user_id) {
     const { app } = this;
@@ -51,7 +52,7 @@ class BillService extends Service {
   /**
    * 更新账单
    * @param params
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async update(params) {
     const { app } = this;
@@ -68,7 +69,7 @@ class BillService extends Service {
    * 删除账单
    * @param id
    * @param user_id
-   * @returns {Promise<*|null>}
+   * @return {Promise<*|null>}
    */
   async delete(id, user_id) {
     const { app } = this;

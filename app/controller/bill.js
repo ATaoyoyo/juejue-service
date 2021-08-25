@@ -8,7 +8,7 @@ const { errorMsg, successMsg } = require('../help/result');
 class BillController extends Controller {
   /**
    * 添加账单
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async add() {
     const { ctx, app } = this;
@@ -37,7 +37,7 @@ class BillController extends Controller {
 
   /**
    * 账单列表
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async list() {
     const { ctx, app } = this;
@@ -85,7 +85,7 @@ class BillController extends Controller {
       const __list = list.filter(item => moment(Number(item.date))
         .format('YYYY-MM') === date);
       // 累加计算支出
-      let totalExpense = __list.reduce((curr, item) => {
+      const totalExpense = __list.reduce((curr, item) => {
         if (item.pay_type === '1') {
           curr += Number(item.amount);
           return curr;
@@ -93,7 +93,7 @@ class BillController extends Controller {
         return curr;
       }, 0);
       // 累加计算收入
-      let totalIncome = __list.reduce((curr, item) => {
+      const totalIncome = __list.reduce((curr, item) => {
         if (item.pay_type === '2') {
           curr += Number(item.amount);
           return curr;
@@ -106,8 +106,8 @@ class BillController extends Controller {
           totalExpense, // 当月支出
           totalIncome, // 当月收入
           totalPage: Math.ceil(listMap.length / page_size), // 总分页
-          list: filterListMap || [] // 格式化后，并且经过分页处理的数据
-        }
+          list: filterListMap || [], // 格式化后，并且经过分页处理的数据
+        },
       });
     } catch (e) {
       console.log(e);
@@ -139,7 +139,7 @@ class BillController extends Controller {
 
   /**
    * 更新账单
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async update() {
     const { ctx, app } = this;
@@ -164,7 +164,7 @@ class BillController extends Controller {
         date, // 日期
         pay_type, // 消费类型
         remark, // 备注
-        user_id: decode.id // 用户 id
+        user_id: decode.id, // 用户 id
       });
       ctx.body = successMsg({});
     } catch (e) {
@@ -175,7 +175,7 @@ class BillController extends Controller {
 
   /**
    * 删除账单
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async delete() {
     const { ctx, app } = this;
@@ -197,7 +197,7 @@ class BillController extends Controller {
 
   /**
    * 账单统计
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async data() {
     const { ctx, app } = this;
@@ -236,28 +236,28 @@ class BillController extends Controller {
         const index = cur.findIndex(item => item.type_id === next.type_id);
         if (index > -1) {
           cur[index].number += Number(next.amount);
-        } else if(index === -1) {
+        } else if (index === -1) {
           cur.push({
             type_id: next.type_id,
             type_name: next.type_name,
             pay_type: next.pay_type,
-            number: Number(next.amount)
+            number: Number(next.amount),
           });
         }
         return cur;
       }, []);
 
       const result = dataMap.map(item => {
-        item.number = Number(Number(item.number).toFixed(2))
-        return item
-      })
+        item.number = Number(Number(item.number).toFixed(2));
+        return item;
+      });
 
       ctx.body = successMsg({
         data: {
           totalExpense: totalExpense.toFixed(2),
           totalIncome: totalIncome.toFixed(2),
-          totalData: result || []
-        }
+          totalData: result || [],
+        },
       });
     } catch (e) {
       console.log(e);

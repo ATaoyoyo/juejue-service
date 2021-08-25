@@ -25,4 +25,7 @@ module.exports = app => {
   router.post('/api/bill/update', _jwt, controller.bill.update);
   router.post('/api/bill/delete', _jwt, controller.bill.delete);
   router.get('/api/bill/data', _jwt, controller.bill.data);
+
+  // 账单类型
+  router.get('/api/type/list', _jwt, controller.type.get);
 };

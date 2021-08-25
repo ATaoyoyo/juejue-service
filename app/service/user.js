@@ -1,10 +1,11 @@
+'use strict';
 const { Service } = require('egg');
 
 class UserService extends Service {
   /**
    * 查询用户信息
    * @param username {string}
-   * @returns {Promise<*|null>}
+   * @return {Promise<*|null>}
    */
   async getUserByName(username) {
     const { app } = this;
@@ -21,7 +22,7 @@ class UserService extends Service {
   /**
    * 注册用户
    * @param params
-   * @returns {Promise<*|null>}
+   * @return {Promise<*|null>}
    */
   async register(params) {
     const { app } = this;
@@ -37,7 +38,7 @@ class UserService extends Service {
   /**
    * 编辑用户
    * @param params
-   * @returns {Promise<*|null>}
+   * @return {Promise<*|null>}
    */
   async editUserInfo(params) {
     const { app, ctx } = this;
