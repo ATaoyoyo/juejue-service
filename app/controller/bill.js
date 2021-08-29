@@ -52,13 +52,13 @@ class BillController extends Controller {
       const list = await ctx.service.bill.list(decode.id);
       // 筛选数据
       const _list = list.filter(item => {
-        const momentDate = moment(Number(item.date)).format('YYYY-MM');
+        const momentDate = moment(item.date).format('YYYY-MM');
         if (type_id !== 'all') return momentDate === date && type_id === item.type_id;
         return momentDate === date;
       });
       // 组装数据
       const listMap = _list.reduce((cur, item) => {
-        const date = moment(Number(item.date)).format('YYYY-MM-DD');
+        const date = moment(item.date).format('YYYY-MM-DD');
         // 如果能在累加的数组中找到当前项日期 date，那么在数组中的加入当前项到 bills 数组。
         if (cur && cur.length && cur.findIndex(item => item.date === date) > -1) {
           const index = cur.findIndex(item => item.date === date);
