@@ -10,6 +10,7 @@ module.exports = secret => {
     if (token !== 'null' && token) {
       try {
         decode = ctx.app.jwt.verify(token, ctx.app.jwt.secret);
+        ctx.userInfo = decode;
         await next();
       } catch (e) {
         console.log(e);
