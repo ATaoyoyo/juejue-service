@@ -4,7 +4,6 @@ const { Controller } = require('egg');
 const moment = require('moment');
 const { errorMsg, successMsg } = require('../help/result');
 
-
 class BillController extends Controller {
   /**
    * 添加账单
@@ -13,9 +12,11 @@ class BillController extends Controller {
   async add() {
     const { ctx, app } = this;
     // 获取请求中携带的参数
-    const { user_id, amount, type_id, type_name, date, pay_type, remark = '' } = ctx.request.body;
+    const { amount, type_id, type_name, date, pay_type, remark = '' } = ctx.request.body;
 
-    if (!user_id || !amount || !type_id || !type_name || !date || !pay_type) {
+    console.log(ctx.userInfo);
+
+    if (!amount || !type_id || !type_name || !date || !pay_type) {
       ctx.body = errorMsg({ message: '参数错误' });
 
       return;
@@ -26,9 +27,9 @@ class BillController extends Controller {
       const decode = app.jwt.verify(token, app.config.jwt.secret);
       if (!decode) return;
 
-      const params = { user_id, amount, type_id, type_name, date, pay_type, remark };
+      const params = { user_id: decode.id, amount, type_id, type_name, date, pay_type, remark };
       await ctx.service.bill.add(params);
-      ctx.body = successMsg({ message: '插入成功' });
+      ctx.body = successMsg({ message: '添加成功' });
     } catch (e) {
       console.log(e);
       ctx.body = errorMsg({ message: '系统错误' });
@@ -51,15 +52,13 @@ class BillController extends Controller {
       const list = await ctx.service.bill.list(decode.id);
       // 筛选数据
       const _list = list.filter(item => {
-        const momentDate = moment(Number(item.date))
-          .format('YYYY-MM');
+        const momentDate = moment(Number(item.date)).format('YYYY-MM');
         if (type_id !== 'all') return momentDate === date && type_id === item.type_id;
         return momentDate === date;
       });
       // 组装数据
       const listMap = _list.reduce((cur, item) => {
-        const date = moment(Number(item.date))
-          .format('YYYY-MM-DD');
+        const date = moment(Number(item.date)).format('YYYY-MM-DD');
         // 如果能在累加的数组中找到当前项日期 date，那么在数组中的加入当前项到 bills 数组。
         if (cur && cur.length && cur.findIndex(item => item.date === date) > -1) {
           const index = cur.findIndex(item => item.date === date);
@@ -82,8 +81,7 @@ class BillController extends Controller {
 
       // 计算当月总收入和支出
       // 首先获取当月所有账单列表
-      const __list = list.filter(item => moment(Number(item.date))
-        .format('YYYY-MM') === date);
+      const __list = list.filter(item => moment(Number(item.date)).format('YYYY-MM') === date);
       // 累加计算支出
       const totalExpense = __list.reduce((curr, item) => {
         if (item.pay_type === '1') {
@@ -114,7 +112,6 @@ class BillController extends Controller {
       ctx.body = errorMsg({ message: '系统错误' });
     }
   }
-
 
   async detail() {
     const { ctx, app } = this;
@@ -192,7 +189,6 @@ class BillController extends Controller {
       console.log(e);
       ctx.body = errorMsg({ message: '系统错误' });
     }
-
   }
 
   /**
@@ -210,13 +206,9 @@ class BillController extends Controller {
     try {
       const bills = await ctx.service.bill.list(decode.id);
       // 根据时间参数，筛选出当月所有的账单数据
-      const start = moment(date)
-        .startOf('month')
-        .unix() * 1000; // 选择月份，月初时间
-      const end = moment(date)
-        .endOf('month')
-        .unix() * 1000; // 选择月份，月末时间
-      const _data = bills.filter(item => (Number(item.date) > start && Number(item.date) < end));
+      const start = moment(date).startOf('month').unix() * 1000; // 选择月份，月初时间
+      const end = moment(date).endOf('month').unix() * 1000; // 选择月份，月末时间
+      const _data = bills.filter(item => Number(item.date) > start && Number(item.date) < end);
       // 总支出
       const totalExpense = _data.reduce((cur, item) => {
         if (item.pay_type === '1') {
