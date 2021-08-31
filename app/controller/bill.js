@@ -208,7 +208,11 @@ class BillController extends Controller {
       // 根据时间参数，筛选出当月所有的账单数据
       const start = moment(date).startOf('month').unix() * 1000; // 选择月份，月初时间
       const end = moment(date).endOf('month').unix() * 1000; // 选择月份，月末时间
-      const _data = bills.filter(item => Number(item.date) > start && Number(item.date) < end);
+
+      const _data = bills.filter(item => {
+        const date = moment(item.date).unix() * 1000;
+        return date > start && date < end;
+      });
       // 总支出
       const totalExpense = _data.reduce((cur, item) => {
         if (item.pay_type === '1') {

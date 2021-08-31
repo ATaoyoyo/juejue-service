@@ -3,14 +3,14 @@
 const { Controller } = require('egg');
 const { successMsg, errorMsg } = require('../help/result');
 
-
 // 默认头像
-const defaultAvatar = 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png';
+const defaultAvatar =
+  'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png';
 
 class UserController extends Controller {
   /**
    *  注册
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async register() {
     const { ctx } = this;
@@ -40,7 +40,7 @@ class UserController extends Controller {
 
   /**
    * 登陆
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async login() {
     const { ctx, app } = this;
@@ -57,18 +57,21 @@ class UserController extends Controller {
       return;
     }
 
-    const token = app.jwt.sign({
-      id: userInfo.id,
-      username: userInfo.username,
-      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60)
-    }, app.config.jwt.secret);
+    const token = app.jwt.sign(
+      {
+        id: userInfo.id,
+        username: userInfo.username,
+        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
+      },
+      app.config.jwt.secret
+    );
 
     ctx.body = successMsg({ data: token });
   }
 
   /**
    * 获取用户信息
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async getUserInfo() {
     const { ctx, app } = this;
@@ -80,14 +83,14 @@ class UserController extends Controller {
         id: userInfo.id,
         username: userInfo.username,
         signature: userInfo.signature,
-        avatar: userInfo.avatar || defaultAvatar
-      }
+        avatar: userInfo.avatar || defaultAvatar,
+      },
     });
   }
 
   /**
    * 编辑用户信息
-   * @returns {Promise<void>}
+   * @return {Promise<void>}
    */
   async editUserInfo() {
     const { ctx, app } = this;
@@ -104,8 +107,8 @@ class UserController extends Controller {
           id: decode.id,
           username: userInfo.username,
           signature,
-          avatar
-        }
+          avatar,
+        },
       });
     } catch (e) {
       console.log(e);
@@ -119,6 +122,5 @@ class UserController extends Controller {
     ctx.body = successMsg({ data: decode });
   }
 }
-
 
 module.exports = UserController;
