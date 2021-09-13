@@ -41,9 +41,10 @@ class UserService extends Service {
    * @return {Promise<*|null>}
    */
   async editUserInfo(params) {
+    console.log('params:', params);
     const { app, ctx } = this;
     try {
-      const result = await app.mysql.update({ ...params }, { id: params.id });
+      const result = await app.mysql.update('user', { ...params }, { where: { id: params.id } });
       return result;
     } catch (e) {
       console.log(e);
