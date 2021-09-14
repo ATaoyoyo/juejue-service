@@ -115,6 +115,29 @@ class UserController extends Controller {
     }
   }
 
+  /**
+   * 编辑用户密码
+   * @return {Promise<void>}
+   */
+  async editUserPassword() {
+    const { ctx, app } = this;
+    const { oldPass, newPass } = ctx.request.body;
+    try {
+      const token = ctx.request.header.authorization;
+      const decode = await app.jwt.verify(token, app.config.jwt.secret);
+      if (!decode) return;
+      const userInfo = await ctx.service.user.getUserByName(decode.username);
+      await ctx.service.user.editUserPassword({
+        id: userInfo.id,
+        oldPass,
+        newPass,
+      });
+      ctx.body = successMsg({ message: '修改成功' });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async test() {
     const { ctx, app } = this;
     const token = ctx.request.header.authorization;
