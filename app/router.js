@@ -34,4 +34,5 @@ module.exports = app => {
 
   // 账单类型
   router.get('/api/type/list', _jwt, controller.type.get);
+  router.post('/api/type/create', _jwt, controller.type.create);
 };
