@@ -15,6 +15,11 @@ module.exports = app => {
   router.post('/api/user/modify_pass', _jwt, controller.user.editUserPassword);
   router.post('/api/user/test', _jwt, controller.user.test);
 
+  // 后台用户
+  router.post('/api/backUser/register', controller.backUser.register);
+  router.post('/api/backUser/login', controller.backUser.login);
+  router.get('/api/backUser/queryUser', _jwt, controller.backUser.queryUser);
+
   // 上传
   router.post('/api/upload', controller.upload.upload);
 

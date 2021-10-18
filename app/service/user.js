@@ -4,14 +4,15 @@ const { Service } = require('egg');
 class UserService extends Service {
   /**
    * 查询用户信息
-   * @param username {string}
+   * @param {string} username  用户名
+   * @param {string} table 表名
    * @return {Promise<*|null>}
    */
-  async getUserByName(username) {
+  async getUserByName(username, table = 'user') {
     const { app } = this;
 
     try {
-      const result = await app.mysql.get('user', { username });
+      const result = await app.mysql.get(table, { username });
       return result;
     } catch (e) {
       console.log(e);
