@@ -21,20 +21,20 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     // myAppName: 'egg',
-    uploadDir: 'app/public/upload'
+    uploadDir: 'app/public/upload',
   };
 
   exports.mysql = {
     // 单数据库信息配置
     client: {
       // host
-      host: 'localhost',
+      host: '162.14.73.199',
       // 端口号
       port: '3306',
       // 用户名
       user: 'root',
       // 密码
-      password: 'Tao990107...',
+      password: 'Atao990107...',
       // 数据库名
       database: 'juejue-cose',
     },
@@ -47,13 +47,13 @@ module.exports = appInfo => {
   config.security = {
     csrf: {
       enable: false,
-      ignoreJSON: true
+      ignoreJSON: true,
     },
     domainWhiteList: [ '*' ], // 配置白名单
   };
 
   config.view = {
-    mapping: { '.html': 'ejs' } //左边写成.html后缀，会自动渲染.html文件
+    mapping: { '.html': 'ejs' }, // 左边写成.html后缀，会自动渲染.html文件
   };
 
   config.jwt = {
@@ -61,14 +61,14 @@ module.exports = appInfo => {
   };
 
   config.multipart = {
-    mode: 'file'
+    mode: 'file',
   };
 
   config.cors = {
     origin: '*', // 允许所有跨域访问
     credentials: true, // 允许 Cookie 跨域跨域
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
-  }
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
 
   return {
     ...config,
