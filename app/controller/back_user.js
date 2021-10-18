@@ -87,6 +87,26 @@ class BackUserController extends Controller {
       console.log(error);
     }
   }
+
+  /**
+   * 删除用户
+   */
+  async delete() {
+    try {
+      const { ctx } = this;
+      const { id } = ctx.request.body;
+      if (!id) {
+        return (ctx.body = errorMsg({ message: '缺少用户Id' }));
+      }
+      const result = await ctx.service.backUser.delete(id);
+      if (result.affectedRows === 1) {
+        return (ctx.body = successMsg({ message: '删除成功' }));
+      }
+      ctx.body = errorMsg({ message: '删除失败' });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = BackUserController;

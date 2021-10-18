@@ -36,6 +36,19 @@ class BackUserService extends Service {
       console.log(error);
     }
   }
+
+  /**
+   * @param {string|number} id 用户id
+   */
+  async delete(id) {
+    try {
+      const { app } = this;
+      const result = await app.mysql.update('back_user', { is_delete: 1 }, { where: { id } });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = BackUserService;

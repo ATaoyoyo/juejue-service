@@ -19,6 +19,7 @@ module.exports = app => {
   router.post('/api/backUser/register', controller.backUser.register);
   router.post('/api/backUser/login', controller.backUser.login);
   router.get('/api/backUser/queryUser', _jwt, controller.backUser.queryUser);
+  router.delete('/api/backUser/delete', _jwt, controller.backUser.delete);
 
   // 上传
   router.post('/api/upload', controller.upload.upload);
