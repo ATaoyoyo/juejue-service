@@ -17,6 +17,9 @@ class TypeController extends Controller {
     }
   }
 
+  /**
+   * 创建账单类型
+   */
   async create() {
     const { ctx } = this;
     const { id, name, type, createType } = ctx.request.body;
@@ -26,12 +29,20 @@ class TypeController extends Controller {
         return;
       }
 
+      const isCreate = await ctx.service.type.isCreated(name, id);
+
+      if (isCreate) {
+        ctx.body = errorMsg({ message: '类型已存在' });
+        return;
+      }
+
       const result = await ctx.service.type.create({
         user_id: id,
         be_create: createType,
         name,
         type,
       });
+
       if (result.affectedRows === 1) {
         ctx.body = successMsg({ message: '创建成功' });
       } else {

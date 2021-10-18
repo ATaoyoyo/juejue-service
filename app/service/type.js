@@ -10,9 +10,14 @@ class TypeService extends Service {
   async get(id) {
     const { app } = this;
     try {
-      const result = await app.mysql.select('type', { default: 0 }, {
-        where: { user_id: id },
-      });
+      // const result = await app.mysql.select('type', { default: 0 }, {
+      //   or: { user_id: id },
+      // });
+
+      const statement = `SELECT * from type WHERE 'default' = 0 OR user_id = ${id};`;
+
+      const result = await app.mysql.query(statement);
+
       return result;
     } catch (e) {
       console.log(e);
@@ -28,6 +33,21 @@ class TypeService extends Service {
     const { app } = this;
     try {
       const result = await app.mysql.insert('type', params);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   *
+   * @param {string} name 查询账单类型是否创建
+   * @param {string} id 用户id
+   */
+  async isCreated(name, id) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.get('type', { name, user_id: id });
       return result;
     } catch (error) {
       console.log(error);
