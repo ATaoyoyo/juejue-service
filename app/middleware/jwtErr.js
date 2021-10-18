@@ -2,7 +2,7 @@
 
 const { errorMsg } = require('../help/result');
 
-module.exports = secret => {
+module.exports = () => {
   return async function jwtErr(ctx, next) {
     const token = ctx.header.authorization;
     let decode;
@@ -16,7 +16,6 @@ module.exports = secret => {
         console.log(e);
         ctx.status = 200;
         ctx.body = errorMsg({ code: 401, message: 'token已过期，请重新登陆' });
-
       }
     } else {
       ctx.status = 200;
