@@ -1,6 +1,7 @@
 'use strict';
 
 const { Service } = require('egg');
+const { throws } = require('power-assert');
 
 class TypeService extends Service {
   /**
@@ -10,13 +11,9 @@ class TypeService extends Service {
   async get(id) {
     const { app } = this;
     try {
-      // const result = await app.mysql.select('type', { default: 0 }, {
-      //   or: { user_id: id },
-      // });
+      const statement = "SELECT * from type WHERE 'default' = 0 OR user_id = ?";
 
-      const statement = `SELECT * from type WHERE 'default' = 0 OR user_id = ${id};`;
-
-      const result = await app.mysql.query(statement);
+      const result = await app.mysql.query(statement, [ id ]);
 
       return result;
     } catch (e) {
