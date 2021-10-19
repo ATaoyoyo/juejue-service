@@ -1,7 +1,6 @@
 'use strict';
 
 const { Service } = require('egg');
-const { throws } = require('power-assert');
 
 class TypeService extends Service {
   /**
