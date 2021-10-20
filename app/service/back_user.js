@@ -20,16 +20,17 @@ class BackUserService extends Service {
   /**
    * 查询用户
    * @param {string} username 用户名
+   * @param {number} is_delete 用户状态
    */
-  async queryUser(username) {
+  async queryUser(username, is_delete) {
     const { app } = this;
 
     try {
       let result;
-      if (username) {
-        result = await app.mysql.get('back_user', { username });
+      if (username || is_delete) {
+        result = await app.mysql.get('back_user', { username, is_delete });
       } else {
-        result = await app.mysql.select('back_user', { where: { is_delete: 0 } });
+        result = await app.mysql.select('back_user');
       }
       return result;
     } catch (error) {
