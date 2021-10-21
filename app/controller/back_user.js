@@ -107,6 +107,26 @@ class BackUserController extends Controller {
       console.log(error);
     }
   }
+
+  /**
+   * 改变用户状态
+   */
+  async changeState() {
+    try {
+      const { ctx } = this;
+      const { id, used } = ctx.request.body;
+      if (!id) {
+        return (ctx.body = errorMsg({ message: '缺少用户Id' }));
+      }
+      const result = await ctx.service.backUser.changeState(id, used);
+      if (result.affectedRows === 1) {
+        return (ctx.body = successMsg({ message: '改变成功' }));
+      }
+      ctx.body = errorMsg({ message: '删除失败' });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = BackUserController;

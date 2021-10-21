@@ -50,6 +50,20 @@ class BackUserService extends Service {
       console.log(error);
     }
   }
+  /**
+   *
+   * @param {string} id 用户ID
+   * @param {number} used 用户状态
+   */
+  async changeState(id, used) {
+    try {
+      const { app } = this;
+      const result = await app.mysql.update('back_user', { id, used });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = BackUserService;
