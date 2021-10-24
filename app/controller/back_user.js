@@ -5,7 +5,7 @@ const { successMsg, errorMsg } = require('../help/result');
 
 class BackUserController extends Controller {
   /**
-   * 注册用户
+   * 创建后台用户
    */
   async register() {
     try {
@@ -24,9 +24,9 @@ class BackUserController extends Controller {
         return;
       }
 
-      const params = { username, password, is_delete: 0 };
+      const params = Object.assign(ctx.request.body, { is_delete: 0 });
       const result = await ctx.service.backUser.register(params);
-      if (result) {
+      if (result.affectedRows === 1) {
         ctx.body = successMsg({ message: '注册成功' });
       } else {
         ctx.body = successMsg({ message: '注册失败' });

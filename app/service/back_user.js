@@ -8,8 +8,16 @@ class BackUserService extends Service {
    */
   async register(params) {
     const { app } = this;
+    const { username, password, phone, used, nickname } = params;
     try {
-      const result = await app.mysql.insert('back_user', params);
+      const result = await app.mysql.insert('back_user', {
+        username,
+        password,
+        phone,
+        used,
+        nickname,
+        is_delete: 0,
+      });
       return result;
     } catch (error) {
       console.log(error);
@@ -20,15 +28,15 @@ class BackUserService extends Service {
   /**
    * 查询用户
    * @param {string} username 用户名
-   * @param {number} is_delete 用户状态
+   * @param {number} used 用户状态
    */
-  async queryUser(username, is_delete) {
+  async queryUser(username, used) {
     const { app } = this;
 
     try {
       let result;
-      if (username || is_delete) {
-        result = await app.mysql.get('back_user', { username, is_delete });
+      if (username || used) {
+        result = await app.mysql.get('back_user', { username, used, is_delete: 9 });
       } else {
         result = await app.mysql.select('back_user');
       }
@@ -39,6 +47,7 @@ class BackUserService extends Service {
   }
 
   /**
+   * 删除用户
    * @param {string|number} id 用户id
    */
   async delete(id) {
