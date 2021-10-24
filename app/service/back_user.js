@@ -27,19 +27,27 @@ class BackUserService extends Service {
 
   /**
    * 查询用户
-   * @param {string} username 用户名
-   * @param {number} used 用户状态
+   * @param {object} params 用户名
    */
-  async queryUser(username, used) {
+  async queryUser(params) {
     const { app } = this;
 
     try {
-      let result;
-      if (username || used) {
-        result = await app.mysql.get('back_user', { username, used, is_delete: 9 });
-      } else {
-        result = await app.mysql.select('back_user');
-      }
+      const result = await app.mysql.select('back_user', { where: { ...params, is_delete: 0 } });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  /**
+   * 更新用户
+   * @param {object} params 用户信息
+   */
+  async update(params) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.update('back_user', params, { where: { id: params.id } });
       return result;
     } catch (error) {
       console.log(error);

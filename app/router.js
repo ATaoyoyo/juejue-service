@@ -21,6 +21,7 @@ module.exports = app => {
   router.get('/api/backUser/queryUser', _jwt, controller.backUser.queryUser);
   router.put('/api/backUser/change', _jwt, controller.backUser.changeState);
   router.delete('/api/backUser/delete', _jwt, controller.backUser.delete);
+  router.post('/api/backUser/update', _jwt, controller.backUser.update);
 
   // 上传
   router.post('/api/upload', controller.upload.upload);

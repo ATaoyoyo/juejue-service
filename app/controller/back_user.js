@@ -75,14 +75,37 @@ class BackUserController extends Controller {
   async queryUser() {
     try {
       const { ctx } = this;
-      const { username } = ctx.request.body;
-      const result = await ctx.service.backUser.queryUser(username);
+
+      ctx.body = ctx.params;
+
+      const result = await ctx.service.backUser.queryUser(ctx.query);
+
+      console.log(result);
 
       if (result) {
         ctx.body = successMsg({ data: result });
         return;
       }
-      ctx.body = errorMsg({ message: '无此用户' });
+      ctx.body = successMsg({ data: [] });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async update() {
+    try {
+      const { ctx } = this;
+      if (!ctx.request.body.id) {
+        ctx.body = errorMsg({ message: '更新失败，缺少用户Id' });
+        return;
+      }
+
+      const result = await ctx.service.backUser.update(ctx.request.body);
+      if (result.affectedRows === 1) {
+        ctx.body = successMsg({ message: '更新成功' });
+        return;
+      }
+      ctx.body = errorMsg({ message: '更新失败' });
     } catch (error) {
       console.log(error);
     }
