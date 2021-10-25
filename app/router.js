@@ -13,7 +13,7 @@ module.exports = app => {
   router.get('/api/user/get_userinfo', _jwt, controller.user.getUserInfo);
   router.post('/api/user/edit_userinfo', _jwt, controller.user.editUserInfo);
   router.post('/api/user/modify_pass', _jwt, controller.user.editUserPassword);
-  router.post('/api/user/test', _jwt, controller.user.test);
+  router.get('/api/user/query', _jwt, controller.user.query);
 
   // 后台用户
   router.post('/api/backUser/register', controller.backUser.register);

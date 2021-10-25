@@ -10,7 +10,6 @@ const defaultAvatar =
 class UserController extends Controller {
   /**
    *  注册
-   * @return {Promise<void>}
    */
   async register() {
     const { ctx } = this;
@@ -40,7 +39,6 @@ class UserController extends Controller {
 
   /**
    * 登陆
-   * @return {Promise<void>}
    */
   async login() {
     const { ctx, app } = this;
@@ -69,9 +67,24 @@ class UserController extends Controller {
     ctx.body = successMsg({ data: token });
   }
 
+  async query() {
+    try {
+      const { ctx } = this;
+      const { username, page, size } = ctx.query;
+      console.log(ctx.query);
+      const result = await ctx.service.user.getAllUser(username, page, size);
+      if (result) {
+        ctx.body = successMsg({ data: result });
+        return;
+      }
+      ctx.body = successMsg({ data: [] });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   /**
    * 获取用户信息
-   * @return {Promise<void>}
    */
   async getUserInfo() {
     const { ctx, app } = this;
@@ -90,7 +103,6 @@ class UserController extends Controller {
 
   /**
    * 编辑用户信息
-   * @return {Promise<void>}
    */
   async editUserInfo() {
     const { ctx, app } = this;
@@ -117,7 +129,6 @@ class UserController extends Controller {
 
   /**
    * 编辑用户密码
-   * @return {Promise<void>}
    */
   async editUserPassword() {
     const { ctx, app } = this;
@@ -136,13 +147,6 @@ class UserController extends Controller {
     } catch (e) {
       console.log(e);
     }
-  }
-
-  async test() {
-    const { ctx, app } = this;
-    const token = ctx.request.header.authorization;
-    const decode = await app.jwt.verify(token, app.config.jwt.secret);
-    ctx.body = successMsg({ data: decode });
   }
 }
 
