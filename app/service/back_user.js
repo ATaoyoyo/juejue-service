@@ -32,6 +32,13 @@ class BackUserService extends Service {
   async queryUser(params) {
     const { app } = this;
 
+    for (const key in params) {
+      if (Object.hasOwnProperty.call(params, key)) {
+        const value = params[key];
+        if (!value) delete params[key];
+      }
+    }
+
     try {
       const result = await app.mysql.select('back_user', { where: { ...params, is_delete: 0 } });
       return result;
@@ -67,8 +74,9 @@ class BackUserService extends Service {
       console.log(error);
     }
   }
+
   /**
-   *
+   * 更改用户状态
    * @param {string} id 用户ID
    * @param {number} used 用户状态
    */

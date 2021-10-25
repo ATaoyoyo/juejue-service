@@ -76,11 +76,9 @@ class BackUserController extends Controller {
     try {
       const { ctx } = this;
 
-      ctx.body = ctx.params;
+      console.log(ctx.query);
 
       const result = await ctx.service.backUser.queryUser(ctx.query);
-
-      console.log(result);
 
       if (result) {
         ctx.body = successMsg({ data: result });
