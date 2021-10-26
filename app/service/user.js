@@ -21,22 +21,21 @@ class UserService extends Service {
 
   /**
    * 查询符合条件的所有用户
-   * @param {string} username 用户名
-   * @param {string} offset 页数
-   * @param {string} limit 条数
+   * @param {object}} param 用户名
    */
-  async getAllUser(username, offset = 1, limit = 10) {
+  async getAllUser({ username, page, size } = { username: null, page: 1, size: 10 }) {
     try {
       const { app } = this;
       const where = username ? { username } : {};
       const result = await app.mysql.select('user', {
         where,
-        limit: Number(limit),
-        offset: offset - 1 ? (Number(offset) - 1) * 10 : 10,
+        limit: Number(size),
+        offset: page - 1 ? (Number(page) - 1) * 10 : 0,
       });
+      const count = await app.mysql.count('user');
 
-      console.log(result, where, username, typeof offset, limit);
-      return result;
+      console.log(count);
+      return { result, count };
     } catch (error) {
       console.log(error);
     }

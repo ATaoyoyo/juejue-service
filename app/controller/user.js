@@ -67,14 +67,16 @@ class UserController extends Controller {
     ctx.body = successMsg({ data: token });
   }
 
+  /**
+   * 查询用户
+   */
   async query() {
     try {
       const { ctx } = this;
       const { username, page, size } = ctx.query;
-      console.log(ctx.query);
-      const result = await ctx.service.user.getAllUser(username, page, size);
-      if (result) {
-        ctx.body = successMsg({ data: result });
+      const { result, count } = await ctx.service.user.getAllUser({ username, page, size });
+      if (result.length) {
+        ctx.body = successMsg({ data: { result, total: count } });
         return;
       }
       ctx.body = successMsg({ data: [] });
