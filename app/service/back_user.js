@@ -32,6 +32,8 @@ class BackUserService extends Service {
   async queryUser(params) {
     const { app } = this;
 
+    console.log(params);
+
     for (const key in params) {
       if (Object.hasOwnProperty.call(params, key)) {
         const value = params[key];
@@ -40,8 +42,16 @@ class BackUserService extends Service {
     }
 
     try {
-      const result = await app.mysql.select('back_user', { where: { ...params, is_delete: 0 } });
-      return result;
+      const { page, size } = params;
+      delete params.page;
+      delete params.size;
+      const result = await app.mysql.select('back_user', {
+        where: { ...params, is_delete: 0 },
+        limit: Number(size),
+        offset: page - 1 ? (Number(page) - 1) * 10 : 0,
+      });
+      const count = await app.mysql.count('back_user');
+      return { result, count };
     } catch (error) {
       console.log(error);
     }
